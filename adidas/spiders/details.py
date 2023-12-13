@@ -11,27 +11,30 @@ class CrawlerSpider(scrapy.Spider):
     # start_urls = ["https://www.adidas.com/us/"]
 
     def start_requests(self):
-        # global url
-        # url = "https://www.adidas.com/us/adidas-by-stella-mccartney-tote/HY4086.html"
+        global url
+        url = "https://www.adidas.com/us/forum-low-cl-the-grinch-shoes/IG7066.html"
 
-        # yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
-        #                                     playwright_page_methods=[
-        #                                         PageMethod('click',  '//*[@id="fixed-content"]/section[2]'),
-        #                                     ],
-        #                                     errback=self.errback))
-        df = pd.read_csv('boyshoe.csv')
-        for url in df['url']:
-            try:
-                yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
-                                                    playwright_page_methods=[
-                                                        PageMethod(
-                                                            "wait_for_selector", "#fixed-content > section:nth-child(4)"),
-                                                        PageMethod(
-                                                            'click',  '//*[@id="fixed-content"]/section[2]'),
-                                                    ],
-                                                    errback=self.errback))
-            except Exception as e:
-                self.logger.error(f'Error at {url}, problem at {e}')
+        yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
+                                            playwright_page_methods=[
+                                                PageMethod(
+                                                    "wait_for_selector", "#fixed-content > section:nth-child(4)"),
+                                                PageMethod(
+                                                    'click',  '//*[@id="fixed-content"]/section[2]'),
+                                            ],
+                                            errback=self.errback))
+        # df = pd.read_csv('boyshoe.csv')
+        # for url in df['url']:
+        #     try:
+        #         yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
+        #                                             playwright_page_methods=[
+        #                                                 PageMethod(
+        #                                                     "wait_for_selector", "#fixed-content > section:nth-child(4)"),
+        #                                                 PageMethod(
+        #                                                     'click',  '//*[@id="fixed-content"]/section[2]'),
+        #                                             ],
+        #                                             errback=self.errback))
+        #     except Exception as e:
+        #         self.logger.error(f'Error at {url}, problem at {e}')
 
     async def parse(self, response):
         page = response.meta["playwright_page"]
@@ -67,6 +70,7 @@ class CrawlerSpider(scrapy.Spider):
             description = response.xpath(
                 '//*[@id="navigation-target-description"]/div/div/div/div/div[1]/h3/text()').get() + ' '
             + response.xpath('//*[@id="navigation-target-description"]/div/div/div/div/div[1]/p/text()').get()
+
         except:
             description = ''
         try:
