@@ -10,25 +10,25 @@ class CrawlerSpider(scrapy.Spider):
 
     def start_requests(self):
         try:
-            yield scrapy.Request(self.url, meta=dict(playwright=True, playwright_include_page=True,
-                                                     errback=self.errback))
+            yield scrapy.Request(self.url, priority=1, meta=dict(playwright=True, playwright_include_page=True,
+                                                                 errback=self.errback))
         except Exception as e:
             self.logger.error(f'Error at {self.url}, reason is {e}')
 
     # def start_requests(self):
     #     urls = [
-    #         'https://www.adidas.com/us/men-clothing',
-    #         'https://www.adidas.com/us/men-shoes',
-    #         'https://www.adidas.com/us/men-accessories',
-    #         'https://www.adidas.com/us/women-clothing',
-    #         'https://www.adidas.com/us/women-shoes',
-    #         'https://www.adidas.com/us/women-accessories',
-    #         'https://www.adidas.com/us/boys-clothing',
-    #         'https://www.adidas.com/us/boys-shoes',
+    #         'https://www.adidas.com/us/men-clothing', x
+    #         'https://www.adidas.com/us/men-shoes', x
+    #         'https://www.adidas.com/us/men-accessories' x,
+    #         'https://www.adidas.com/us/women-clothing',x
+    #         'https://www.adidas.com/us/women-shoes', x
+    #         'https://www.adidas.com/us/women-accessories' , x
+    #         'https://www.adidas.com/us/boys-clothing', x
+    #         'https://www.adidas.com/us/boys-shoes', x
     #         'https://www.adidas.com/us/girls-clothing',
-    #         'https://www.adidas.com/us/girls-shoes',
-    #         'https://www.adidas.com/us/kids-infant_toddler',
-    #         'https://www.adidas.com/us/kids-accessories'
+    #         'https://www.adidas.com/us/girls-shoes',x
+    #         'https://www.adidas.com/us/kids-infant_toddler', x
+    #         'https://www.adidas.com/us/kids-accessories' x
     #     ]
 
     #     for url in urls:
@@ -67,7 +67,7 @@ class CrawlerSpider(scrapy.Spider):
                 try:
                     next_page_url = "https://www.adidas.com" + next_page
                     self.logger.info(f'Requested at {next_page_url}')
-                    yield scrapy.Request(next_page_url, meta=dict(
+                    yield scrapy.Request(next_page_url, priority=2, meta=dict(
                         playwright=True,
                         playwright_include_page=True,
                         errback=self.errback,
