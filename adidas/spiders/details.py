@@ -11,17 +11,17 @@ class CrawlerSpider(scrapy.Spider):
     # start_urls = ["https://www.adidas.com/us/"]
 
     def start_requests(self):
-        global url
+        # global url
         # url = "https://www.adidas.com/us/forum-low-cl-the-grinch-shoes/IG7066.html"
 
-        # yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
-        #                                     playwright_page_methods=[
-        #                                         PageMethod(
-        #                                             'click',  '//*[@id="fixed-content"]/section[2]'),
-        #                                     ],
-        #                                     errback=self.errback))
-        df = pd.read_csv('boyshoe.csv')
-        for url in df['url'][:5]:
+        # yield scrapy.Request(self.url, meta=dict(playwright=True, playwright_include_page=True,
+        #                                          playwright_page_methods=[
+        #                                              PageMethod(
+        #                                                  'click',  '//*[@id="fixed-content"]/section[2]'),
+        #                                          ],
+        #                                          errback=self.errback))
+        df = pd.read_csv(self.path)
+        for url in df['url']:
             try:
                 yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
                                                     playwright_page_methods=[
