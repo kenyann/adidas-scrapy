@@ -14,25 +14,27 @@ class CrawlerSpider(scrapy.Spider):
         # global url
         # url = "https://www.adidas.com/us/forum-low-cl-the-grinch-shoes/IG7066.html"
 
-        # yield scrapy.Request(self.url, meta=dict(playwright=True, playwright_include_page=True,
-        #                                          playwright_page_methods=[
-        #                                              PageMethod(
-        #                                                  'click',  '//*[@id="fixed-content"]/section[2]'),
-        #                                          ],
-        #                                          errback=self.errback))
-        df = pd.read_csv(self.path)
-        for url in df['url']:
+        # yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
+        #                                     playwright_page_methods=[
+        #                                         PageMethod(
+        #                                             'click',  '//*[@id="fixed-content"]/section[2]'),
+        #                                     ],
+        #                                     errback=self.errback))
+        df = pd.read_json(self.path, lines=True)
+        for index in range(len(df['url']))[int(self.start):]:
             try:
-                yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
-                                                    playwright_page_methods=[
-                                                        # PageMethod(
-                                                        #     "wait_for_selector", "#fixed-content > section:nth-child(4)"),
-                                                        PageMethod(
-                                                            'click',  '//*[@id="fixed-content"]/section[2]'),
-                                                    ],
-                                                    errback=self.errback))
+                self.logger.info(f"Requested at {index} - {df['url'][index]}")
+                yield scrapy.Request(df['url'][index],
+                                     meta=dict(playwright=True, playwright_include_page=True,
+                                               playwright_page_methods=[
+                                                   # PageMethod(
+                                                   #     "wait_for_selector", "#fixed-content > section:nth-child(4)"),
+                                                   PageMethod(
+                                                       'click',  '//*[@id="fixed-content"]/section[2]'),
+                                               ],
+                                               errback=self.errback))
             except Exception as e:
-                self.logger.error(f'Error at {url}, problem at {e}')
+                self.logger.error(f'Error at {index}, problem at {e}')
 
     async def parse(self, response):
         page = response.meta["playwright_page"]
@@ -91,6 +93,13 @@ class CrawlerSpider(scrapy.Spider):
                 '//*[@id="navigation-target-reviews"]/div/button/div[1]/div/div/span/text()').get(),
         except:
             avg_rating = ''
+        # ----------------------------------------------------------------
+        try:
+            img_ls = response.xpath(
+                '//*[@id="pdp-gallery-desktop-grid-container"]//img/@src').extract()[:4]
+        except:
+            img_ls = []
+
         yield {
             'name': name,
             'price': price,
@@ -102,7 +111,8 @@ class CrawlerSpider(scrapy.Spider):
             'brand': 'Adidas',
             'currency': 'USD',
             'url': response.request.url,
-            'availability': 'INSTOCK'
+            'availability': 'INSTOCK',
+            'images': img_ls
         }
 
     async def errback(self, failure):
