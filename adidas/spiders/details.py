@@ -17,8 +17,6 @@ class CrawlerSpider(scrapy.Spider):
         yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
                                             playwright_page_methods=[
                                                 PageMethod(
-                                                    "wait_for_selector", "#fixed-content > section:nth-child(4)"),
-                                                PageMethod(
                                                     'click',  '//*[@id="fixed-content"]/section[2]'),
                                             ],
                                             errback=self.errback))
@@ -38,6 +36,7 @@ class CrawlerSpider(scrapy.Spider):
 
     async def parse(self, response):
         page = response.meta["playwright_page"]
+        screenshot = await page.screenshot(path="example.png", full_page=True)
         await page.close()
         # check if have more than one color
         color_available = response.xpath(

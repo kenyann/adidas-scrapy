@@ -9,31 +9,31 @@ class CrawlerSpider(scrapy.Spider):
     # start_urls = ["https://www.adidas.com/us/"]
 
     def start_requests(self):
-        # urls = [
-        #     #         'https://www.adidas.com/us/men-clothing',
-        #     'https://www.adidas.com/us/men-shoes',
-        #     'https://www.adidas.com/us/men-accessories',
-        #     'https://www.adidas.com/us/women-clothing',
-        #     'https://www.adidas.com/us/women-shoes',
-        #     'https://www.adidas.com/us/women-accessories',
-        #     # 'https://www.adidas.com/us/boys-clothing',
-        #     #         'https://www.adidas.com/us/boys-shoes',
-        #     #         'https://www.adidas.com/us/girls-clothing',
-        #     #         'https://www.adidas.com/us/girls-shoes',
-        #     #         # 'https://www.adidas.com/us/kids-infant_toddler',
-        #     #         'https://www.adidas.com/us/kids-accessories'
-        # ]
+        urls = [
+            #         'https://www.adidas.com/us/men-clothing',
+            'https://www.adidas.com/us/men-shoes',
+            'https://www.adidas.com/us/men-accessories',
+            'https://www.adidas.com/us/women-clothing',
+            'https://www.adidas.com/us/women-shoes',
+            'https://www.adidas.com/us/women-accessories',
+            # 'https://www.adidas.com/us/boys-clothing',
+            #         'https://www.adidas.com/us/boys-shoes',
+            #         'https://www.adidas.com/us/girls-clothing',
+            #         'https://www.adidas.com/us/girls-shoes',
+            #         # 'https://www.adidas.com/us/kids-infant_toddler',
+            #         'https://www.adidas.com/us/kids-accessories'
+        ]
 
-        # for url in urls:
-        #     try:
-        #         yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
-        #                                             errback=self.errback))
-        #     except Exception as e:
-        #         self.logger.error(f'Error at {url}, reason is {e}')
+        for url in urls:
+            try:
+                yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
+                                                    errback=self.errback))
+            except Exception as e:
+                self.logger.error(f'Error at {url}, reason is {e}')
 
-        url = 'https://www.adidas.com/us/men-shoes'
-        yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
-                                            errback=self.errback))
+        # url = 'https://www.adidas.com/us/men-athletic_sneakers?start=48'
+        # yield scrapy.Request(url, meta=dict(playwright=True, playwright_include_page=True,
+        #                                     errback=self.errback))
 
     async def parse(self, response):
         page = response.meta["playwright_page"]
@@ -41,17 +41,10 @@ class CrawlerSpider(scrapy.Spider):
 
         container = response.xpath(
             '//*[@id="main-content"]/div/div[3]/div/div/div[2]/div[1]/div')
-#  /html/body/div[2]/div/div[1]/div[1]/div/div/div[5]/div/div[3]/div/div/div[2]/div[1] page 2
-#  /html/body/div[2]/div/div[1]/div[1]/div/div/div[5]/div/div[3]/div/div/div[2]/div[1]/div/div[1] page 1
-#                             //*[@id="main-content"]/div/div[3]/div/div/div[2]/div[1]/div/div[2]
-        tmp = response.xpath(
-            '*[@id="main-content"]/div/div[3]/div/div/div[2]/div[1]/div/div[2]')
-        if tmp:
-            items = response.xpath(
-                '//*[@id="main-content"]/div/div[3]/div/div/div[2]/div[1]/div/')
+
         items = container.css('div.grid-item')
 
-        for item in items:
+        for item in items[1:]:
             try:
                 yield {
                     'name': item.css('div > div > div > a > div > p.glass-product-card__title::text').get(),
