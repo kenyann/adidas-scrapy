@@ -10,13 +10,13 @@ class CrawlerSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            #         'https://www.adidas.com/us/men-clothing',
-            # 'https://www.adidas.com/us/men-shoes',
-            # 'https://www.adidas.com/us/men-accessories',
-            # 'https://www.adidas.com/us/women-clothing',
-            # 'https://www.adidas.com/us/women-shoes',
-            # 'https://www.adidas.com/us/women-accessories',
-            # 'https://www.adidas.com/us/boys-clothing',
+            'https://www.adidas.com/us/men-clothing',
+            'https://www.adidas.com/us/men-shoes',
+            'https://www.adidas.com/us/men-accessories',
+            'https://www.adidas.com/us/women-clothing',
+            'https://www.adidas.com/us/women-shoes',
+            'https://www.adidas.com/us/women-accessories',
+            'https://www.adidas.com/us/boys-clothing',
             'https://www.adidas.com/us/boys-shoes',
             'https://www.adidas.com/us/girls-clothing',
             'https://www.adidas.com/us/girls-shoes',
