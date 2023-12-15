@@ -118,5 +118,3 @@ class CrawlerSpider(scrapy.Spider):
     async def errback(self, failure):
         page = failure.request.meta["playwright_page"]
         await page.close()
-
-# availability	avg_rating	brand	color	currency	description	images	name	price	review_count	scraped_at	url
